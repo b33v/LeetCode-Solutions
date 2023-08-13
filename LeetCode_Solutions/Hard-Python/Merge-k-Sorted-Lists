@@ -1,0 +1,48 @@
+from typing import List
+
+class ListNode:
+  def __init__(self, val):
+    self.val = val
+    self.next = None
+
+class Solution:
+  def mergeKLists(self, lists: List[ListNode]) -> ListNode:
+    if len(lists) == 0:
+      return None
+
+    if len(lists) == 1:
+      return lists[0]
+
+    # Divide the list of linked lists into two halves
+    mid = len(lists) // 2
+    left = lists[:mid]
+    right = lists[mid:]
+
+    # Recursively merge the left and right halves
+    leftMerged = self.mergeKLists(left)
+    rightMerged = self.mergeKLists(right)
+
+    # Merge the left and right merged lists
+    return self.mergeTwoLists(leftMerged, rightMerged)
+
+  def mergeTwoLists(self, l1: ListNode, l2: ListNode) -> ListNode:
+    resultHead = ListNode(0)
+    resultTail = resultHead
+
+    while l1 is not None and l2 is not None:
+      if l1.val <= l2.val:
+        resultTail.next = l1
+        l1 = l1.next
+      else:
+        resultTail.next = l2
+        l2 = l2.next
+
+      resultTail = resultTail.next
+
+    if l1 is not None:
+      resultTail.next = l1
+
+    if l2 is not None:
+      resultTail.next = l2
+
+    return resultHead.next

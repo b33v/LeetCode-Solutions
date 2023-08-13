@@ -1,0 +1,18 @@
+class Solution:
+    def fullJustify(self, words: [str], maxWidth: int) -> [str]:
+        res, line, line_length = [], [], 0
+
+        for word in words:
+            # Check if adding a new word exceeds the width
+            if line_length + len(word) + len(line) > maxWidth:
+                # Calculate the spaces for each slot
+                for i in range(maxWidth - line_length):
+                    line[i % (len(line) - 1 or 1)] += ' '
+                res.append(''.join(line))
+                line, line_length = [], 0
+            line.append(word)
+            line_length += len(word)
+
+        # For the last line
+        res.append(' '.join(line).ljust(maxWidth, ' '))
+        return res

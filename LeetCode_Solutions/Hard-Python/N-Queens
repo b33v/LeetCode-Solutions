@@ -1,0 +1,43 @@
+from typing import List
+
+class Solution:
+    def _solveNQueens(self, n: int, row: int, positions: List[int], result: List[List[str]]):
+        # base case: if all queens have been placed, add the positions to the result
+        if row == n:
+            result.append(self.getBoard(positions, n))
+            return
+
+        # try all columns for the current row
+        for col in range(n):
+            # if it is safe to place a queen at (row, col), do it
+            if self.isSafe(row, col, positions):
+                positions[row] = col
+                # place the rest of the queens
+                self._solveNQueens(n, row + 1, positions, result)
+                # backtrack and try a different column for the current row
+                positions[row] = -1
+
+    def getBoard(self, positions: List[int], n: int) -> List[str]:
+        # create the board representation from the positions
+        board = []
+        for row in range(n):
+            board.append("".join(["Q" if col == positions[row] else "." for col in range(n)]))
+        return board
+
+    def isSafe(self, row: int, col: int, positions: List[int]) -> bool:
+        # check if it is safe to place a queen at (row, col) given the positions of the other queens
+        # check if there is a queen in the same column
+        for r in range(row):
+            if positions[r] == col:
+                return False
+        # check if there is a queen in the same diagonal
+        for r, c in enumerate(positions[:row]):
+            if r - c == row - col or r + c == row + col:
+                return False
+        return True
+
+    def solveNQueens(self, n: int) -> List[List[str]]:
+        positions = [-1] * n
+        result = []
+        self._solveNQueens(n, 0, positions, result)
+        return result

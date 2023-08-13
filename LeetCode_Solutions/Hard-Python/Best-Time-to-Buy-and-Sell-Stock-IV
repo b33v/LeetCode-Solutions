@@ -1,0 +1,21 @@
+class Solution:
+    def maxProfit(self, k: int, prices: [int]) -> int:
+        if not prices:
+            return 0
+
+        # If k is bigger than the number of price fluctuations, maximize profits
+        if k >= len(prices) // 2:
+            return sum(
+                x - y
+                for x, y in zip(prices[1:], prices[:-1])
+                if x > y)
+
+        # Dynamic programming approach
+        profits = [0] * len(prices)
+        for j in range(k):
+            prev_profit = 0
+            for i in range(1, len(prices)):
+                profit = prices[i] - prices[i - 1]
+                prev_profit = max(profits[i], prev_profit + profit)
+                profits[i] = max(profits[i - 1], prev_profit)
+        return profits[-1]

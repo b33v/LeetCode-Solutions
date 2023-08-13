@@ -1,0 +1,17 @@
+class Solution:
+    def firstMissingPositive(self, nums):
+        n = len(nums)
+
+        # Filter out all negative numbers and numbers larger than n
+        nums = [x for x in nums if 1 <= x <= n]
+
+        for i in range(n):
+            x = nums[i]
+            while 1 <= x <= n and nums[x - 1] != x:
+                nums[i], nums[x - 1] = nums[x - 1], nums[i]
+                x = nums[i]
+
+            if nums[i] != i + 1:
+                return i + 1
+
+        return n + 1

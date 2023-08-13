@@ -1,0 +1,38 @@
+class Solution:
+    def isNumber(self, s: str) -> bool:
+        # remove leading and trailing whitespace
+        s = s.strip()
+        
+        # initialize variables to store whether each component of the number has been found
+        has_digit = False
+        has_dot = False
+        has_e = False
+        has_digit_after_e = True
+        
+        # iterate through each character in the string
+        for i in range(len(s)):
+            # if the character is a digit
+            if s[i].isdigit():
+                has_digit = True
+                has_digit_after_e = True
+            # if the character is a sign character and it is not the first character or it follows 'e' or 'E'
+            elif s[i] == '+' or s[i] == '-':
+                if i > 0 and s[i-1] != 'e' and s[i-1] != 'E':
+                    return False
+            # if the character is a dot and it has not been found before and 'e' or 'E' has not been found before
+            elif s[i] == '.':
+                if has_dot or has_e:
+                    return False
+                has_dot = True
+            # if the character is 'e' or 'E' and it has not been found before and there is at least one digit before it
+            elif s[i] == 'e' or s[i] == 'E':
+                if has_e or not has_digit:
+                    return False
+                has_e = True
+                has_digit_after_e = False
+            # if the character is anything else, it is not a valid character for a number
+            else:
+                return False
+        
+        # return False if there is no digit or there is 'e' or 'E' but no digit after it
+        return has_digit and has_digit_after_e
